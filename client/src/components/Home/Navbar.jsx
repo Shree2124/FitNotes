@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   AppBar,
   Toolbar,
   IconButton,
-  Typography,
   Drawer,
   List,
   ListItem,
@@ -37,11 +36,15 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar sx={{
-          bgcolor: theme.palette.appBar.background,
-          color: theme.palette.appBar.textColor
-        }} position="static">
-        <Toolbar >
+      <AppBar
+        sx={{
+          zIndex: "50",
+          position: "fixed",
+          bgcolor: "transparent",
+          color: "white",
+        }}
+      >
+        <Toolbar>
           {isMobile ? (
             <>
               <Box
@@ -117,7 +120,7 @@ const Navbar = () => {
           <div>
             <IconButton
               sx={{
-                color: theme.palette.primary,
+                color: "white",
               }}
               onClick={() => setDrawerOpen(false)}
             >
