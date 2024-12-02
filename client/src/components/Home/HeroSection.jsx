@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import React from "react";
 import { Link } from "react-router-dom";
+import herosection from "../../assets/herosection.jpg"
 
 // Define your custom fonts and theme styles
 const customFontStyle = {
@@ -18,7 +19,7 @@ const HeroSection = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: "80px 20px",
-          backgroundImage: "url('./src/assets/herosection.jpg')",
+          backgroundImage: `url(${herosection})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           color: "white",
