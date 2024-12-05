@@ -1,14 +1,21 @@
-const sendMail = async (email, subject, data) => {
-    const transport = createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        auth: {
-            user: process.env.EMAIL_ADDRESS,
-            pass: process.env.EMAIL_PASSWORD,
-        },
-    });
+import { createTransport, Transporter } from "nodemailer";
 
-    const html = `<!DOCTYPE html>
+interface MailData {
+  name: string;
+  otp: number;
+}
+
+const sendMail = async (email: string, subject: string, data: MailData): Promise<void> => {
+  const transport: Transporter = createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    auth: {
+      user: process.env.EMAIL_ADDRESS as string,
+      pass: process.env.EMAIL_PASSWORD as string,
+    },
+  });
+
+  const html = `<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8">
@@ -23,6 +30,7 @@ const sendMail = async (email, subject, data) => {
               justify-content: center;
               align-items: center;
               height: 100vh;
+              background-color: #f9f9f9;
           }
           .container {
               background-color: #fff;
@@ -32,7 +40,7 @@ const sendMail = async (email, subject, data) => {
               text-align: center;
           }
           h1 {
-              color: red;
+              color: #ff0000; /* Red color for heading */
           }
           p {
               margin-bottom: 20px;
@@ -48,17 +56,18 @@ const sendMail = async (email, subject, data) => {
   <body>
       <div class="container">
           <h1>OTP Verification</h1>
-          <p>Hello ${data.name} your (One-Time Password) for your account verification is.</p>
-          <p class="otp">${data.otp}</p> 
+          <p>Hello ${data.name}, your One-Time Password (OTP) for account verification is:</p>
+          <p class="otp">${data.otp}</p>
       </div>
   </body>
-  </html>
-  `;
+  </html>`;
 
-    await transport.sendMail({
-        from: process.env.Gmail,
-        to: email,
-        subject,
-        html,
-    });
+  await transport.sendMail({
+    from: process.env.EMAIL_ADDRESS as string,
+    to: email,
+    subject,
+    html,
+  });
 };
+
+export default sendMail;
