@@ -1,6 +1,6 @@
 import dotenv from "dotenv"
-import { app } from "./app"
-import dbConnection from "./db/db"
+import { app } from "./app.js"
+import dbConnection from "./db/db.js"
 
 dotenv.config({
     path: "./env"
@@ -13,10 +13,7 @@ dbConnection().then(()=>{
 }).catch((err)=>{console.log(err);
 })
 
-app.listen(port,()=>{
-    console.log(`Server is running: ${port}`);
-})
 
-app.get("/",(req, res)=>{
-    res.send("Hello")
+app.listen(port,()=>{
+    console.log(`app listening ${port}`);
 })

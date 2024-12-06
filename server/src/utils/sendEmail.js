@@ -1,17 +1,13 @@
-import { createTransport, Transporter } from "nodemailer";
+import { createTransport } from "nodemailer";
 
-interface MailData {
-  name: string;
-  otp: number;
-}
 
-const sendMail = async (email: string, subject: string, data: MailData): Promise<void> => {
-  const transport: Transporter = createTransport({
+const sendMail = async (email, subject, data) => {
+  const transport = createTransport({
     host: "smtp.gmail.com",
     port: 465,
     auth: {
-      user: process.env.EMAIL_ADDRESS as string,
-      pass: process.env.EMAIL_PASSWORD as string,
+      user: process.env.EMAIL_ADDRESS,
+      pass: process.env.EMAIL_PASSWORD,
     },
   });
 
@@ -63,7 +59,7 @@ const sendMail = async (email: string, subject: string, data: MailData): Promise
   </html>`;
 
   await transport.sendMail({
-    from: process.env.EMAIL_ADDRESS as string,
+    from: process.env.EMAIL_ADDRESS,
     to: email,
     subject,
     html,

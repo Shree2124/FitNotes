@@ -5,3 +5,7 @@ const options = {
     path: '/',
     maxAge: 15 * 60 * 1000
 };
+
+export {
+    options
+}
