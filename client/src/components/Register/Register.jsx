@@ -1,13 +1,32 @@
-import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import { Box, Button, Grid, Modal, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import registerPic from "../../assets/register.jpg";
+import { api } from "../../api/api";
 
 const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [activationToken, setActivationToken] = useState("");
+  const [otp, setOtp] = useState("");
+
+  const [modal, setModal] = useState(false);
+
+  const handleClose = () => setModal(false);
+  const handleOtp = async () => {
+    console.log("Entered OTP:", otp);
+    try {
+      const res = await api.post("/users/verify", { otp, activationToken });
+      // if (res.status === 200) {
+        handleClose();
+      // }
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
 
   const validateForm = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,10 +51,25 @@ const Register = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
+    console.log("submitting form ");
+
     e.preventDefault();
     if (validateForm()) {
-      console.log("Registration Form Submitted");
+      try {
+        const res = await api.post("/users/register", {
+          email,
+          username,
+          password,
+        });
+        console.log(res);
+        if (res.status === 200) {
+          setActivationToken(res.data.activationToken);
+          setModal(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -172,6 +206,54 @@ const Register = () => {
           </Typography>
         </Box>
       </Grid>
+
+      {modal && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="otp-modal-title"
+          aria-describedby="otp-modal-description"
+        >
+          <Box
+            sx={{
+              position: "absolute",
+              top: "10%", // Top of the screen
+              left: "50%",
+              transform: "translate(-50%, 0)",
+              width: 300,
+              bgcolor: "background.paper",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
+            }}
+          >
+            <Typography
+              id="otp-modal-title"
+              variant="h6"
+              component="h2"
+              gutterBottom
+            >
+              Enter OTP
+            </Typography>
+            <TextField
+              label="OTP"
+              variant="outlined"
+              fullWidth
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              onClick={handleOtp}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Modal>
+      )}
     </Grid>
   );
 };

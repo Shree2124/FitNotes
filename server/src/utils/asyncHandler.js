@@ -4,18 +4,3 @@ const asyncHandler = (requestHandler) => {
   };
 };
 export { asyncHandler };
-
-// const asyncHandler = () => {}
-// const asyncHandler = (func) => {async()=> {}}
-
-// const asyncHandler = (fn) => async (req,res,next) => {
-//     try {
-//         await fn(req,res,next);
-//     } catch (error) {
-//         console.log("utils::asyncHandler:: error:- ",error);
-//         res.status(err.code || 500).json({
-//             success: false,
-//             message: error.message
-//         });
-//     }
-// }

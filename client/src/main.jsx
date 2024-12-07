@@ -3,13 +3,17 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import { CssBaseline } from "@mui/material";
+import { Provider } from "react-redux";
 import App from "./App.jsx";
+import { store } from "./redux/store.js";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ThemeProvider>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </Provider>
   </StrictMode>
 );
