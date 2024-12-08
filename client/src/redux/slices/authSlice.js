@@ -3,7 +3,7 @@ import { api } from "../../api/api"
 
 const initialState = {
     auth: false,
-    user: {},
+    user: null,
     loading: true,
     error: null,
 }
@@ -39,9 +39,11 @@ export const fetchUser = () => async (dispatch) => {
     dispatch(setLoading(true));
     try {
         const res = await api.get("/users/current-user");
+        console.log(res.data.data);
         dispatch(setUser(res.data.data))
         dispatch(setAuth(true))
         dispatch(setLoading(false))
+        dispatch(setError(null))
     } catch (error) {
         console.log(error);
         dispatch(setError(error.message));

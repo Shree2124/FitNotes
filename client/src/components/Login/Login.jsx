@@ -1,13 +1,20 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import loginPic from "../../assets/loginPic.jpg";
-import { Link } from "react-router-dom";
-import google from "../../assets/google.svg"
+import { Link, useNavigate } from "react-router-dom";
+import google from "../../assets/google.svg";
+import { api } from "../../api/api";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../redux/slices/authSlice";
+// import { fetchUser } from "../../redux/slices/authSl
+
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch();
 
   const validateForm = () => {
     const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
@@ -27,10 +34,20 @@ const Login = () => {
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form Submitted");
+      try {
+        const res = await api.post("/users/login", { username, password });
+        console.log(res);
+        if(res.status === 200){
+          dispatch(setUser(res.data.data.user))
+          navigate("/dashboard")
+        }
+        // fetchUser(dispatch);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
