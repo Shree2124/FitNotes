@@ -19,9 +19,9 @@ const Register = () => {
     console.log("Entered OTP:", otp);
     try {
       const res = await api.post("/users/verify", { otp, activationToken });
-      // if (res.status === 200) {
+      if (res.status === 200) {
         handleClose();
-      // }
+      }
     } catch (error) {
       console.log(error);
       setError(error.message);

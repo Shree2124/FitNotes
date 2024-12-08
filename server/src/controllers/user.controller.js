@@ -25,9 +25,9 @@ const generateAccessAndRefreshTokens = async (userId) => {
 }
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { fullName, email, username, password } = req.body;
+    const { email, username, password } = req.body;
     if (
-        [fullName, email, username, password].some((field) => field?.trim() === "")
+        [email, username, password].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required");
     }
@@ -39,7 +39,6 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const user = {
-        fullName,
         username,
         email,
         password,
@@ -165,7 +164,6 @@ const verifyUser = asyncHandler(async (req, res) => {
     await User.create({
         username: verify.user.username,
         email: verify.user.email,
-        fullName: verify.user.fullName,
         password: verify.user.password,
     });
 
@@ -232,9 +230,9 @@ const getCurrentUser = asyncHandler(async (req, res) => {
 });
 
 const updateAccountDetails = asyncHandler(async (req, res) => {
-    const { fullName, email } = req.body;
+    const { email } = req.body;
 
-    if (!fullName || !email) {
+    if (!email) {
         throw new ApiError(400, "All fields are required");
     }
 
@@ -242,7 +240,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         req.user?._id,
         {
             $set: {
-                fullName,
                 email: email,
             },
         },
