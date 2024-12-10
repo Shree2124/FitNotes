@@ -13,9 +13,6 @@ const getCookieToken = (tokenName) => {
     return token ? token.split("=")[1] : null;
 };
 
-let isRefreshing = false;
-let failedQueue = [];
-
 api.interceptors.request.use(
     (config) => {
         const accessToken = getCookieToken("accessToken");
@@ -30,57 +27,46 @@ api.interceptors.request.use(
 api.interceptors.response.use(
     (response) => response,
     async (error) => {
+        console.log("Error Intercepted:", error.response?.status);
         const originalReq = error.config;
 
         if (error.response?.status === 401 && !originalReq._retry) {
+            console.log("Attempting Token Refresh...");
             originalReq._retry = true;
 
-            if (isRefreshing) {
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
-                }).then((accessToken) => {
-                    originalReq.headers.Authorization = `Bearer ${accessToken}`;
-                    return axios(originalReq);
-                }).catch((err) => Promise.reject(err));
-            }
-
-            isRefreshing = true;
-            const refreshToken = getCookieToken("refreshToken");
-
-            if (!refreshToken) {
-                store.dispatch(clearUser());
-                store.dispatch(setAuth(false));
-                return Promise.reject(error);
-            }
-
             try {
-                const refreshRes = await api.post("/users/refresh-token", { refreshToken });
+                const refreshToken = getCookieToken("refreshToken");
+                console.log("Refresh Token:", refreshToken);
+                console.log(document.cookie);
+                
 
+                if (!refreshToken) {
+                    console.log("No Refresh Token Found!");
+                    store.dispatch(clearUser());
+                    store.dispatch(setAuth(false));
+                    return Promise.reject(error);
+                }
 
-                document.cookie = `accessToken=${refreshRes.data.accessToken}; secure; SameSite=None; HttpOnly`;
+                const { data } = await api.post("/users/refresh-token", { refreshToken });
+                
+                
+                console.log("New Access Token:", data.accessToken);
 
+                document.cookie = `accessToken=${data.accessToken}; path=/; secure; SameSite=None;`;
+                originalReq.headers.Authorization = `Bearer ${data.accessToken}`;
 
-                axios.defaults.headers['Authorization'] = `Bearer ${refreshRes.data.accessToken}`;
-
-                failedQueue.forEach(({ resolve }) => resolve(refreshRes.data.accessToken));
-                failedQueue = [];
-
-                return api(originalReq);
-
+                return api(originalReq); // Retry the original request
             } catch (refreshError) {
+                console.log("Token Refresh Failed:", refreshError);
                 store.dispatch(clearUser());
                 store.dispatch(setAuth(false));
-                failedQueue.forEach(({ reject }) => reject(refreshError));
-                failedQueue = [];
-
                 return Promise.reject(refreshError);
-            } finally {
-                isRefreshing = false;
             }
         }
 
         return Promise.reject(error);
     }
 );
+
 
 export { api };

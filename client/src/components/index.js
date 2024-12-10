@@ -9,6 +9,7 @@ import Workout from "./Dashboard/Workout";
 import Progress from "./Dashboard/Progress";
 import Home from "./Dashboard/Home"
 import Goals from "./Dashboard/Goals";
+import AuthLayout from "./Layouts/AuthLayout";
 
 export {
     Login,
@@ -21,5 +22,6 @@ export {
     Workout,
     Progress,
     Home,
-    Goals
+    Goals,
+    AuthLayout
 }
