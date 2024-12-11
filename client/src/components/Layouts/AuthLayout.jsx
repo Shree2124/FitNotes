@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { CircularProgress } from "@mui/material"; // Import MUI CircularProgress
-import { fetchUser, setAuth, clearUser } from "../../redux/slices/authSlice"; // Redux actions
+import { CircularProgress } from "@mui/material"; 
+import { fetchUser } from "../../redux/slices/authSlice";
 
 const AuthLayout = ({ children }) => {
   const dispatch = useDispatch();

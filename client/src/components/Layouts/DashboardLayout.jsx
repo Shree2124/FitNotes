@@ -12,18 +12,16 @@ import {
   Close,
   Menu,
   Assessment,
-  Fastfood,
   ExitToApp,
   Home,
 } from "@mui/icons-material";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import Logo from "../Logo/Logo";
 import { useThemeContext } from "../../context/ThemeContext";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-const primaryColor = "#3f51b5";
 const secondaryColor = "#1a237e";
 const textColor = "#e8eaf6";
 const activeBgColor = "#3949ab";
