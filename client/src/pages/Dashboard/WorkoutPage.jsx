@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Workout } from "../../components/index";
 
 const WorkoutPage = () => {
   return (
     <div>
-      workout
+      <Workout />
     </div>
-  )
-}
+  );
+};
 
-export default WorkoutPage
+export default WorkoutPage;
