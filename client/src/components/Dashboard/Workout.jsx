@@ -1,15 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { Box, Typography, Grid, Card, CardContent, CardMedia } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
+import chest from "../../assets/chest.jpg"
+import shoulder from "../../assets/shoulder.jpg"
+import legs from "../../assets/legs.jpg"
+import bicep from "../../assets/bicep.jpg"
+import back from "../../assets/back.jpg"
 
 const Workout = () => {
   const [muscles, setMuscles] = useState([]);
 
   const dummyMuscles = [
-    { id: "1", name: "Chest", image: "https://via.placeholder.com/150?text=Chest", smallImage: "https://via.placeholder.com/50?text=Ex1" },
-    { id: "2", name: "Biceps", image: "https://via.placeholder.com/150?text=Biceps", smallImage: "https://via.placeholder.com/50?text=Ex2" },
-    { id: "3", name: "Legs", image: "https://via.placeholder.com/150?text=Legs", smallImage: "https://via.placeholder.com/50?text=Ex3" },
-    { id: "4", name: "Back", image: "https://via.placeholder.com/150?text=Back", smallImage: "https://via.placeholder.com/50?text=Ex4" },
-    { id: "5", name: "Shoulders", image: "https://via.placeholder.com/150?text=Shoulders", smallImage: "https://via.placeholder.com/50?text=Ex5" },
+    { id: "1", name: "Chest", image: "https://via.placeholder.com/150?text=Chest", smallImage: chest },
+    { id: "2", name: "Biceps", image: "https://via.placeholder.com/150?text=Biceps", smallImage: bicep},
+    { id: "3", name: "Legs", image: "https://via.placeholder.com/150?text=Legs", smallImage: legs },
+    { id: "4", name: "Back", image: "https://via.placeholder.com/150?text=Back", smallImage: back },
+    { id: "5", name: "Shoulders", image: "https://via.placeholder.com/150?text=Shoulders", smallImage: shoulder },
   ];
 
   
