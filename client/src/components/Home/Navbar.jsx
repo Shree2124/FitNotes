@@ -103,14 +103,14 @@ const Navbar = () => {
                           zIndex: 1300,
                         }}
                       >
-                        <Button fullWidth href="/profile" onClick={() => setDropdownOpen(false)}>
+                        <Button fullWidth href="/dashboard/profile" onClick={() => setDropdownOpen(false)}>
                           Profile
+                        </Button>
+                        <Button fullWidth href="/dashboard" onClick={() => setDropdownOpen(false)}>
+                          Dashboard
                         </Button>
                         <Button fullWidth onClick={handleLogout}>
                           Logout
-                        </Button>
-                        <Button fullWidth href="/user/dashboard" onClick={() => setDropdownOpen(false)}>
-                          Dashboard
                         </Button>
                       </Box>
                     )}

@@ -10,6 +10,7 @@ import Progress from "./Dashboard/Progress";
 import Home from "./Dashboard/Home"
 import Goals from "./Dashboard/Goals";
 import AuthLayout from "./Layouts/AuthLayout";
+import Profile from "./Dashboard/Profile";
 
 export {
     Login,
@@ -23,5 +24,6 @@ export {
     Progress,
     Home,
     Goals,
-    AuthLayout
+    AuthLayout,
+    Profile
 }

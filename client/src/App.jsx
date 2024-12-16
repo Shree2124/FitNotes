@@ -8,6 +8,7 @@ import {
   ProgressPage,
   RegisterPage,
   WorkoutPage,
+  ProfilePage
 } from "./pages/index.js";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
@@ -44,6 +45,7 @@ function App() {
                       {/* <Route path="nutrition" element={<NutritionPage />} /> */}
                       <Route path="progress" element={<ProgressPage />} />
                       <Route path="goals" element={<GoalsPage />} />
+                      <Route path="profile" element={<ProfilePage />} />
                     </Routes>
                   </DashboardLayout>
                 </AuthLayout>

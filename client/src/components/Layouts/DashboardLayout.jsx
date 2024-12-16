@@ -14,6 +14,7 @@ import {
   Assessment,
   ExitToApp,
   Home,
+  Person2
 } from "@mui/icons-material";
 import { useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
@@ -68,6 +69,11 @@ const fitNotesTabs = [
     name: "Goals",
     path: "/dashboard/goals",
     icon: <Assessment />,
+  },
+  {
+    name: "Profile",
+    path: "/dashboard/profile",
+    icon: <Person2 />,
   },
 ];
 

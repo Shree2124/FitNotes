@@ -5,6 +5,7 @@ import WorkoutPage from "./Dashboard/WorkoutPage";
 import ProgressPage from "./Dashboard/ProgressPage"
 import DashboardHomePage from "./Dashboard/DashboardHomePage";
 import GoalsPage from "./Dashboard/GoalsPage";
+import ProfilePage from "./Dashboard/ProfilePage";
 
 export {
     LoginPage,
@@ -13,5 +14,6 @@ export {
     WorkoutPage,
     ProgressPage,
     DashboardHomePage,
-    GoalsPage
+    GoalsPage,
+    ProfilePage
 }
