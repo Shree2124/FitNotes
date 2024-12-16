@@ -10,22 +10,45 @@ import {
   Box,
   Button,
   useTheme,
+  Avatar,
+  Typography,
 } from "@mui/material";
 import { Close, Menu } from "@mui/icons-material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import Logo from "../Logo/Logo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretDown, faCaretUp } from "@fortawesome/free-solid-svg-icons";
+import { useSelector } from "react-redux";
 import { useThemeContext } from "../../context/ThemeContext";
+import Logo from "../Logo/Logo";
 
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
   const { isDarkMode, toggleTheme } = useThemeContext();
+  const { auth, user } = useSelector((state) => state.user);
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const toggleDrawer = (open) => () => {
+  const handleDrawerToggle = (open) => {
     setDrawerOpen(open);
+  };
+
+  const handleDropdownToggle = (event) => {
+    event.stopPropagation();
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Add your logout API call here
+      console.log("User logged out");
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
   const menuItems = [
@@ -36,94 +59,85 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar
-        sx={{
-          zIndex: "50",
-          position: "fixed",
-          bgcolor: "transparent",
-          color: "white",
-        }}
-      >
+      <AppBar position="fixed" sx={{ bgcolor: "transparent", color: "white", zIndex: 1201 }}>
         <Toolbar>
-          {isMobile ? (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                <div className="">
-                  <Logo
-                    src="./fitnotes2.svg"
-                    alt="FitNotes"
-                    width="150px"
-                    height="50px"
-                  />
-                </div>
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={toggleDrawer(true)}
-                >
-                  <Menu />
-                </IconButton>
-              </Box>
-            </>
-          ) : (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
-            >
-              <div className="">
-                <Logo
-                  src="./fitnotes2.svg"
-                  alt="FitNotes"
-                  width="150px"
-                  height="50px"
-                />
-              </div>
-              <div className="flex gap-3">
-                {menuItems.map((item) => (
-                  <Button key={item.text} color="inherit" href={item.link}>
-                    {item.text}
-                  </Button>
-                ))}
+          <Box sx={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <Logo src="./fitnotes2.svg" alt="FitNotes" width="150px" height="50px" />
+            {isMobile ? (
+              <IconButton color="inherit" onClick={() => handleDrawerToggle(true)}>
+                <Menu />
+              </IconButton>
+            ) : (
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                {!auth ? (
+                  menuItems.map((item) => (
+                    <Button key={item.text} color="inherit" href={item.link}>
+                      {item.text}
+                    </Button>
+                  ))
+                ) : (
+                  <Box position="relative">
+                    <Box display="flex" alignItems="center">
+                      <Avatar
+                        src={user.avatar || "https://www.w3schools.com/howto/img_avatar.png"}
+                        alt="User Avatar"
+                      />
+                      <Typography sx={{ ml: 1 }}>{user?.username || "User"}</Typography>
+                      <IconButton onClick={handleDropdownToggle}>
+                        <FontAwesomeIcon
+                          icon={isDropdownOpen ? faCaretUp : faCaretDown}
+                          color="white"
+                        />
+                      </IconButton>
+                    </Box>
+                    {isDropdownOpen && (
+                      <Box
+                        sx={{
+                          position: "absolute",
+                          top: "100%",
+                          right: 0,
+                          mt: 1,
+                          bgcolor: "background.paper",
+                          boxShadow: 3,
+                          borderRadius: 1,
+                          zIndex: 1300,
+                        }}
+                      >
+                        <Button fullWidth href="/profile" onClick={() => setDropdownOpen(false)}>
+                          Profile
+                        </Button>
+                        <Button fullWidth onClick={handleLogout}>
+                          Logout
+                        </Button>
+                        <Button fullWidth href="/user/dashboard" onClick={() => setDropdownOpen(false)}>
+                          Dashboard
+                        </Button>
+                      </Box>
+                    )}
+                  </Box>
+                )}
                 <IconButton onClick={toggleTheme} color="inherit">
                   {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                 </IconButton>
-              </div>
-            </Box>
-          )}
+              </Box>
+            )}
+          </Box>
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={drawerOpen} onClose={() => handleDrawerToggle(false)}>
         <Box
           sx={{
             width: 250,
             display: "flex",
             flexDirection: "column",
-            alignItems: "baseline",
             justifyContent: "space-between",
             height: "100%",
           }}
-          role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
         >
-          <div>
-            <IconButton
-              sx={{
-                color: "white",
-              }}
-              onClick={() => setDrawerOpen(false)}
-            >
+          <Box>
+            <IconButton onClick={() => handleDrawerToggle(false)} sx={{ alignSelf: "flex-start" }}>
               <Close />
             </IconButton>
             <List>
@@ -133,12 +147,12 @@ const Navbar = () => {
                 </ListItem>
               ))}
             </List>
-          </div>
-          <div className="mb-4 pl-5">
+          </Box>
+          <Box sx={{ p: 2, textAlign: "center" }}>
             <IconButton onClick={toggleTheme} color="inherit">
               {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
-          </div>
+          </Box>
         </Box>
       </Drawer>
     </>
