@@ -11,6 +11,7 @@ import Home from "./Dashboard/Home"
 import Goals from "./Dashboard/Goals";
 import AuthLayout from "./Layouts/AuthLayout";
 import Profile from "./Dashboard/Profile";
+import AddForm from "./constants/AddForm";
 
 export {
     Login,
@@ -25,5 +26,6 @@ export {
     Home,
     Goals,
     AuthLayout,
-    Profile
+    Profile,
+    AddForm
 }

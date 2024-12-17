@@ -7,8 +7,10 @@ import {
   CardContent,
   Avatar,
   IconButton,
+  Modal,
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import {AddForm} from "../index"
 import chest from "../../assets/chest.jpg";
 import shoulder from "../../assets/shoulder.jpg";
 import legs from "../../assets/legs.jpg";
@@ -20,6 +22,7 @@ import triceps from "../../assets/triceps.webp";
 
 const Workout = () => {
   const [muscles, setMuscles] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dummyMuscles = [
     { id: "1", name: "Abs", image: "", smallImage: abs },
@@ -33,8 +36,21 @@ const Workout = () => {
   ];
 
   useEffect(() => {
-    setMuscles(dummyMuscles); // TODO: actual API call
+    setMuscles(dummyMuscles); // TODO: Replace with an actual API call
   }, []);
+
+  const handleAddMuscle = (newMuscle) => {
+    const updatedMuscles = [
+      ...muscles,
+      {
+        id: muscles.length + 1,
+        name: newMuscle.name,
+        smallImage: triceps, 
+      },
+    ];
+    setMuscles(updatedMuscles);
+    setIsModalOpen(false); 
+  };
 
   return (
     <Box
@@ -56,6 +72,7 @@ const Workout = () => {
           Workout Muscles
         </Typography>
         <IconButton
+          onClick={() => setIsModalOpen(true)}
           sx={{
             backgroundColor: "#1976d2",
             color: "white",
@@ -72,6 +89,7 @@ const Workout = () => {
           <Add />
         </IconButton>
       </Box>
+
       <Grid container spacing={3}>
         {muscles.map((muscle) => (
           <Grid item xs={12} sm={6} md={4} key={muscle.id}>
@@ -106,6 +124,27 @@ const Workout = () => {
           </Grid>
         ))}
       </Grid>
+
+      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: "white",
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <AddForm
+            type="muscle"
+            onSubmit={(newMuscle) => handleAddMuscle(newMuscle)}
+          />
+        </Box>
+      </Modal>
     </Box>
   );
 };
