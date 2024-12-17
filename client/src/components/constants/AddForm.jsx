@@ -53,7 +53,6 @@ const AddForm = ({ type }) => {
         />
       )}
 
-      {/* Submit Button */}
       <Button
         type="submit"
         variant="contained"
