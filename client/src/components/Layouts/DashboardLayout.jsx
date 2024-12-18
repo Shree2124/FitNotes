@@ -6,6 +6,7 @@ import {
   Stack,
   Typography,
   styled,
+  useTheme,
 } from "@mui/material";
 import {
   FitnessCenter,
@@ -14,7 +15,7 @@ import {
   Assessment,
   ExitToApp,
   Home,
-  Person2
+  Person2,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
@@ -23,43 +24,19 @@ import { useThemeContext } from "../../context/ThemeContext";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 
-const secondaryColor = "#1a237e";
-const textColor = "#e8eaf6";
-const activeBgColor = "#3949ab";
-
 const fontFamily = "'Poppins', sans-serif";
-
-const Link = styled(RouterLink)`
-  text-decoration: none;
-  border-radius: 8px;
-  padding: 0.8rem 1rem;
-  display: flex;
-  align-items: center;
-  color: ${textColor};
-  font-family: ${fontFamily};
-  transition: all 0.3s ease-in-out;
-
-  &:hover {
-    background-color: ${activeBgColor};
-  }
-`;
 
 const fitNotesTabs = [
   {
     name: "Home",
     path: "/dashboard",
-    icon: <Home />
+    icon: <Home />,
   },
   {
     name: "Workout Logs",
     path: "/dashboard/workouts",
     icon: <FitnessCenter />,
   },
-  // {
-  //   name: "Nutrition Tracking",
-  //   path: "/dashboard/nutrition",
-  //   icon: <Fastfood />,
-  // },
   {
     name: "Progress Reports",
     path: "/dashboard/progress",
@@ -77,9 +54,25 @@ const fitNotesTabs = [
   },
 ];
 
-const SideBar = ({ w = "100%", bgcolor = "", h = "" }) => {
+const Link = styled(RouterLink)(({ theme }) => ({
+  textDecoration: "none",
+  borderRadius: "8px",
+  padding: "0.8rem 1rem",
+  display: "flex",
+  alignItems: "center",
+  color: theme.palette.text.primary,
+  fontFamily: fontFamily,
+  transition: "all 0.3s ease-in-out",
+  "&:hover": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.background.paper,
+  },
+}));
+
+const SideBar = ({ w = "100%", h = "" }) => {
   const location = useLocation();
   const { isDarkMode, toggleTheme } = useThemeContext();
+  const theme = useTheme();
 
   const logoutHandler = () => {
     console.log("User logged out");
@@ -88,7 +81,7 @@ const SideBar = ({ w = "100%", bgcolor = "", h = "" }) => {
   return (
     <Stack
       width={w}
-      bgcolor={bgcolor || secondaryColor}
+      bgcolor={theme.palette.background.default}
       height={h || "100vh"}
       direction={"column"}
       justifyContent={"space-between"}
@@ -96,7 +89,7 @@ const SideBar = ({ w = "100%", bgcolor = "", h = "" }) => {
       spacing={"2rem"}
       alignItems={"center"}
       sx={{
-        color: textColor,
+        color: theme.palette.text.primary,
         fontFamily: fontFamily,
         boxShadow: "2px 0 8px rgba(0, 0, 0, 0.2)",
         position: "relative",
@@ -121,8 +114,8 @@ const SideBar = ({ w = "100%", bgcolor = "", h = "" }) => {
             to={tab.path}
             sx={
               location.pathname === tab.path && {
-                bgcolor: activeBgColor,
-                color: textColor,
+                bgcolor: theme.palette.primary.main,
+                color: theme.palette.text.secondary,
               }
             }
           >
@@ -134,8 +127,13 @@ const SideBar = ({ w = "100%", bgcolor = "", h = "" }) => {
         ))}
       </Stack>
 
-      <Stack className="pr-[5rem]">
-        <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} spacing={"0.7rem"}>
+      <Stack>
+        <Stack
+          direction={"row"}
+          alignItems={"center"}
+          justifyContent={"center"}
+          spacing={"0.7rem"}
+        >
           <IconButton onClick={toggleTheme} color="inherit">
             {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
@@ -167,7 +165,7 @@ const DashboardLayout = ({ children }) => {
     <Grid
       container
       sx={{
-        bgcolor: "#e8eaf6",
+        bgcolor: "background.default",
         fontFamily: fontFamily,
         minHeight: "100vh",
       }}
@@ -184,7 +182,7 @@ const DashboardLayout = ({ children }) => {
         <IconButton
           onClick={handleMobile}
           sx={{
-            color: secondaryColor,
+            color: "primary.main",
             fontSize: "2rem",
           }}
         >
@@ -210,7 +208,7 @@ const DashboardLayout = ({ children }) => {
         md={9}
         lg={9.5}
         sx={{
-          bgcolor: "#f3f4f6",
+          bgcolor: "background.paper",
           padding: "2rem",
           overflowY: "auto",
           height: "100vh",
@@ -224,7 +222,7 @@ const DashboardLayout = ({ children }) => {
         onClose={handleClose}
         PaperProps={{
           sx: {
-            bgcolor: secondaryColor,
+            bgcolor: "background.default",
             width: "75vw",
           },
         }}

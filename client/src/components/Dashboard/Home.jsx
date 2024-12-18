@@ -1,22 +1,21 @@
 import { useEffect } from "react";
 import { fetchUser } from "../../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { CircularProgress, Box, Typography, Button } from "@mui/material";
+import { CircularProgress, Box, Typography, Button, useTheme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, loading, error, auth } = useSelector((state) => state.user);
+  const theme = useTheme();
 
   useEffect(() => {
-    // If the user is not authenticated, fetch user data
     if (!auth) {
       dispatch(fetchUser());
     }
   }, [auth, dispatch]);
 
-  // Redirect to login if user is not authenticated and not loading
   useEffect(() => {
     if (!loading && !user) {
       navigate("/login");
@@ -30,8 +29,12 @@ const Home = () => {
         justifyContent="center"
         alignItems="center"
         height="100vh"
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
+        }}
       >
-        <CircularProgress />
+        <CircularProgress color="primary" />
       </Box>
     );
   }
@@ -44,14 +47,23 @@ const Home = () => {
         justifyContent="center"
         alignItems="center"
         height="100vh"
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          color: theme.palette.text.primary,
+          padding: theme.spacing(2),
+        }}
       >
-        <Typography variant="h6" color="error">
+        <Typography variant="h6" color="error" gutterBottom>
           Error: {error}
         </Typography>
         <Button
           variant="contained"
           color="primary"
           onClick={() => dispatch(fetchUser())}
+          sx={{
+            padding: theme.spacing(1, 3),
+            marginTop: theme.spacing(2),
+          }}
         >
           Retry
         </Button>
@@ -60,11 +72,19 @@ const Home = () => {
   }
 
   return (
-    <Box sx={{ padding: 4 }}>
+    <Box
+      sx={{
+        padding: theme.spacing(4),
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
+        borderRadius: theme.shape.borderRadius,
+        boxShadow: theme.shadows[2],
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Welcome, {user?.name || "User"}
       </Typography>
-      <Typography variant="body1">
+      <Typography variant="body1" gutterBottom>
         Email: {user?.email || "Not available"}
       </Typography>
     </Box>

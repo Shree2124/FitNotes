@@ -1,16 +1,7 @@
 import { useState, useEffect } from "react";
-import {
-  Box,
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Avatar,
-  IconButton,
-  Modal,
-} from "@mui/material";
-import { Add } from "@mui/icons-material";
-import {AddForm} from "../index"
+import { Box, Typography, Grid, Card, CardContent, Avatar, IconButton, Modal, Button } from "@mui/material";
+import { Add, Close } from "@mui/icons-material";
+import { AddForm } from "../index";
 import chest from "../../assets/chest.jpg";
 import shoulder from "../../assets/shoulder.jpg";
 import legs from "../../assets/legs.jpg";
@@ -19,10 +10,13 @@ import back from "../../assets/back.jpg";
 import abs from "../../assets/abs.jpg";
 import cardio from "../../assets/cardio.jpg";
 import triceps from "../../assets/triceps.webp";
+import { useThemeContext } from '../../context/ThemeContext'; // Import the custom hook
 
 const Workout = () => {
   const [muscles, setMuscles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { isDarkMode, toggleTheme, theme } = useThemeContext(); // Access theme context
 
   const dummyMuscles = [
     { id: "1", name: "Abs", image: "", smallImage: abs },
@@ -36,7 +30,7 @@ const Workout = () => {
   ];
 
   useEffect(() => {
-    setMuscles(dummyMuscles); // TODO: Replace with an actual API call
+    setMuscles(dummyMuscles); // TODO: Replace with actual API call if needed
   }, []);
 
   const handleAddMuscle = (newMuscle) => {
@@ -45,18 +39,18 @@ const Workout = () => {
       {
         id: muscles.length + 1,
         name: newMuscle.name,
-        smallImage: triceps, 
+        smallImage: triceps,
       },
     ];
     setMuscles(updatedMuscles);
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
   };
 
   return (
     <Box
       sx={{
         padding: { xs: 2, sm: 4 },
-        backgroundColor: "#f9f9f9",
+        backgroundColor: theme.palette.background.default,
         minHeight: "100vh",
       }}
     >
@@ -68,16 +62,17 @@ const Workout = () => {
           mb: 5,
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
+        <Typography variant="h4" gutterBottom sx={{ textAlign: "center", color: theme.palette.text.primary }}>
           Workout Muscles
         </Typography>
+
         <IconButton
           onClick={() => setIsModalOpen(true)}
           sx={{
-            backgroundColor: "#1976d2",
-            color: "white",
+            backgroundColor: "primary.main",
+            color: "text.primary",
             "&:hover": {
-              backgroundColor: "#115293",
+              backgroundColor: "primary.dark",
             },
             boxShadow: 2,
             transition: "transform 0.3s",
@@ -99,6 +94,7 @@ const Workout = () => {
                 boxShadow: 3,
                 transition: "transform 0.2s",
                 "&:hover": { transform: "scale(1.05)" },
+                backgroundColor: theme.palette.background.paper,
               }}
             >
               <CardContent
@@ -108,7 +104,7 @@ const Workout = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: theme.palette.text.primary }}>
                   {muscle.name}
                 </Typography>
                 <Avatar
@@ -133,14 +129,21 @@ const Workout = () => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 400,
-            bgcolor: "white",
+            bgcolor: theme.palette.background.paper,
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
           }}
         >
+          <IconButton sx={{
+            position: "absolute",
+            right: "1.7rem",
+            top: "1rem"
+          }} onClick={() => setIsModalOpen(false)}>
+            <Close />
+          </IconButton>
           <AddForm
-            type="muscle"
+            type="exercise"
             onSubmit={(newMuscle) => handleAddMuscle(newMuscle)}
           />
         </Box>
