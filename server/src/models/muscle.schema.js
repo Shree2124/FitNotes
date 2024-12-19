@@ -6,11 +6,15 @@ const MuscleSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    note: {
+        type: String,
+        trim: true,
+    },
     defaultExercises: [
         {
             name: {
                 type: String,
-                required: true,
+                required: true
             },
         },
     ],
