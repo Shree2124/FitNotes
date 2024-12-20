@@ -1,19 +1,25 @@
 import { useState } from "react";
-import { Button, Typography, Box, useTheme } from "@mui/material";
+import { Button, Typography, Box, useTheme, CircularProgress } from "@mui/material";
+import useApi from "../../hooks/useApi";
 
 const AddForm = ({ type }) => {
   const [name, setName] = useState("");
   const [note, setNote] = useState("");
   const theme = useTheme();
+  const { loading, error, callApi } = useApi();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (type === "workout" && name.trim() !== "") {
       console.log({ workout: { name } });
       alert("Workout Added Successfully!");
     } else if (type === "muscle" && name.trim() !== "") {
-      console.log({ muscle: { name } });
-      alert("Muscle Added Successfully!");
+      const response = await callApi({
+        url: "/muscle/add-muscle", 
+        method: "POST",
+        body: { name, note },
+      });
+      console.log(response);
     } else {
       alert("Please fill in all required fields.");
     }
@@ -48,6 +54,19 @@ const AddForm = ({ type }) => {
       >
         {type === "workout" ? "Add Workout" : "Add Muscle"}
       </Typography>
+
+      {error && (
+        <div
+          style={{
+            color: "red",
+            fontSize: "14px",
+            marginBottom: "16px",
+            textAlign: "center",
+          }}
+        >
+          {error}
+        </div>
+      )}
 
       <div style={{ marginBottom: "16px" }}>
         <label
@@ -94,14 +113,12 @@ const AddForm = ({ type }) => {
         >
           Note
         </label>
-        <input
-          type="text"
+        <textarea
           id="note"
           name="note"
           value={note}
           onChange={(e) => setNote(e.target.value)}
           style={{
-            color: theme.palette.primary.main,
             width: "100%",
             padding: "12px",
             fontSize: "14px",
@@ -110,16 +127,17 @@ const AddForm = ({ type }) => {
             outline: "none",
             transition: "border-color 0.3s",
           }}
-        />
+        ></textarea>
       </div>
 
       <Button
         type="submit"
         variant="contained"
-        color="primary"
+        disabled={loading}
         fullWidth
         sx={{
-          color: theme.palette.primary.main,
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.background.paper,
           padding: 2,
           fontWeight: "bold",
           fontSize: 16,
@@ -132,7 +150,7 @@ const AddForm = ({ type }) => {
           },
         }}
       >
-        {type === "workout" ? "Add Workout" : "Add Muscle"}
+        {loading ? <CircularProgress size={24} color="inherit" /> : type === "workout" ? "Add Workout" : "Add Muscle"}
       </Button>
     </Box>
   );

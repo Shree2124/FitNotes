@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Grid, Card, CardContent, Avatar, IconButton, Modal, Button } from "@mui/material";
+import { Box, Typography, Grid, Card, CardContent, Avatar, IconButton, Modal } from "@mui/material";
 import { Add, Close } from "@mui/icons-material";
 import { AddForm } from "../index";
 import chest from "../../assets/chest.jpg";
@@ -16,7 +16,7 @@ const Workout = () => {
   const [muscles, setMuscles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { isDarkMode, toggleTheme, theme } = useThemeContext(); // Access theme context
+  const { theme } = useThemeContext(); 
 
   const dummyMuscles = [
     { id: "1", name: "Abs", image: "", smallImage: abs },
@@ -136,6 +136,7 @@ const Workout = () => {
           }}
         >
           <IconButton sx={{
+            color: theme.palette.text.primary,
             position: "absolute",
             right: "1.7rem",
             top: "1rem"
@@ -143,7 +144,7 @@ const Workout = () => {
             <Close />
           </IconButton>
           <AddForm
-            type="exercise"
+            type="muscle"
             onSubmit={(newMuscle) => handleAddMuscle(newMuscle)}
           />
         </Box>
