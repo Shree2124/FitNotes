@@ -28,4 +28,29 @@ const addMuscle = asyncHandler(async (req, res) => {
     return res.status(200).json(new ApiResponse(201, muscle, "Muscle is created successfully"));
 });
 
-export { addMuscle };
+const editMuscle = asyncHandler(async (req, res) => {
+    const { name, note } = req.body
+    const {muscleId} = req.params
+    console.log(muscleId);
+    
+
+    if (!name) {
+        throw new ApiError(400, "Name is required")
+    }
+
+    const muscle = await Muscle.findOne({ _id: muscleId })
+
+    if (!muscle) {
+        throw new ApiError(404, "Muscle not found")
+    }
+
+    const updatedMuscle = await Muscle.findOneAndUpdate(
+        { _id: muscleId },
+        { $set: { name, note } },
+        { new: true }
+    )
+
+    return res.status(200).json(new ApiResponse(201, updatedMuscle, "Muscle updated Successfully"))
+})
+
+export { addMuscle, editMuscle };

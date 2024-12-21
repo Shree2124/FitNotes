@@ -1,6 +1,17 @@
 import { useState, useEffect } from "react";
-import { Box, Typography, Grid, Card, CardContent, Avatar, IconButton, Modal } from "@mui/material";
-import { Add, Close } from "@mui/icons-material";
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
+  IconButton,
+  Modal,
+  Menu,
+  MenuItem,
+} from "@mui/material";
+import { Add, Close, MoreVert } from "@mui/icons-material";
 import { AddForm } from "../index";
 import chest from "../../assets/chest.jpg";
 import shoulder from "../../assets/shoulder.jpg";
@@ -10,13 +21,15 @@ import back from "../../assets/back.jpg";
 import abs from "../../assets/abs.jpg";
 import cardio from "../../assets/cardio.jpg";
 import triceps from "../../assets/triceps.webp";
-import { useThemeContext } from '../../context/ThemeContext'; // Import the custom hook
+import { useThemeContext } from "../../context/ThemeContext";
 
 const Workout = () => {
   const [muscles, setMuscles] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null); // State for the menu anchor
+  const [selectedMuscle, setSelectedMuscle] = useState(null); // State for the selected muscle
 
-  const { theme } = useThemeContext(); 
+  const { theme } = useThemeContext();
 
   const dummyMuscles = [
     { id: "1", name: "Abs", image: "", smallImage: abs },
@@ -33,17 +46,24 @@ const Workout = () => {
     setMuscles(dummyMuscles); // TODO: Replace with actual API call if needed
   }, []);
 
-  const handleAddMuscle = (newMuscle) => {
-    const updatedMuscles = [
-      ...muscles,
-      {
-        id: muscles.length + 1,
-        name: newMuscle.name,
-        smallImage: triceps,
-      },
-    ];
-    setMuscles(updatedMuscles);
-    setIsModalOpen(false);
+  const handleMenuOpen = (event, muscle) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedMuscle(muscle);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedMuscle(null);
+  };
+
+  const handleEdit = () => {
+    console.log("Edit:", selectedMuscle);
+    handleMenuClose();
+  };
+
+  const handleDelete = () => {
+    setMuscles(muscles.filter((muscle) => muscle.id !== selectedMuscle.id));
+    handleMenuClose();
   };
 
   return (
@@ -62,7 +82,11 @@ const Workout = () => {
           mb: 5,
         }}
       >
-        <Typography variant="h4" gutterBottom sx={{ textAlign: "center", color: theme.palette.text.primary }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ textAlign: "center", color: theme.palette.text.primary }}
+        >
           Workout Muscles
         </Typography>
 
@@ -104,22 +128,50 @@ const Workout = () => {
                   alignItems: "center",
                 }}
               >
-                <Typography variant="h6" sx={{ fontWeight: "bold", color: theme.palette.text.primary }}>
+                <Typography
+                  variant="h6"
+                  sx={{ fontWeight: "bold", color: theme.palette.text.primary }}
+                >
                   {muscle.name}
                 </Typography>
-                <Avatar
-                  src={muscle.smallImage}
-                  alt={`${muscle.name} Exercise`}
-                  sx={{
-                    width: { xs: "3rem", sm: "5rem" },
-                    height: { xs: "3rem", sm: "5rem" },
-                  }}
-                />
+                <div>
+                  <Avatar
+                    src={muscle.smallImage}
+                    alt={`${muscle.name} Exercise`}
+                    sx={{
+                      width: { xs: "3rem", sm: "5rem" },
+                      height: { xs: "3rem", sm: "5rem" },
+                    }}
+                  />
+
+                  <IconButton
+                    onClick={(event) => handleMenuOpen(event, muscle)}
+                    sx={{
+                      position: "relative",
+                      right: "0",
+                      left: { lg: "3rem", sm: "3rem" },
+                      paddingTop: "1rem",
+                      paddingBottom: "0",
+                    }}
+                  >
+                    <MoreVert />
+                  </IconButton>
+                </div>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
+
+      {/* Dropdown Menu */}
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleMenuClose}
+      >
+        <MenuItem onClick={handleEdit}>Edit</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+      </Menu>
 
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Box
@@ -135,17 +187,19 @@ const Workout = () => {
             borderRadius: 2,
           }}
         >
-          <IconButton sx={{
-            color: theme.palette.text.primary,
-            position: "absolute",
-            right: "1.7rem",
-            top: "1rem"
-          }} onClick={() => setIsModalOpen(false)}>
+          <IconButton
+            sx={{
+              color: theme.palette.text.primary,
+              position: "absolute",
+              right: "1.7rem",
+              top: "1rem",
+            }}
+            onClick={() => setIsModalOpen(false)}
+          >
             <Close />
           </IconButton>
           <AddForm
             type="muscle"
-            onSubmit={(newMuscle) => handleAddMuscle(newMuscle)}
           />
         </Box>
       </Modal>
