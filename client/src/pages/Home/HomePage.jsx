@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { FeaturesSection, HeroSection, Navbar } from "../../components";
+import { FeaturesSection, Footer, HeroSection, Navbar, TestimonialsSection } from "../../components";
 import { useThemeContext } from "../../context/ThemeContext";
 
 const HomePage = () => {
@@ -16,7 +16,15 @@ const HomePage = () => {
         <Navbar />
       </div>
       <HeroSection />
-      {/* <FeaturesSection /> */}
+      <div className="w-full">
+      <FeaturesSection />
+      </div>
+      <div className="w-full">
+        <TestimonialsSection />
+      </div>
+      <div className="w-full">
+        <Footer />
+      </div>
     </Box>
   );
 };

@@ -12,6 +12,8 @@ import Goals from "./Dashboard/Goals";
 import AuthLayout from "./Layouts/AuthLayout";
 import Profile from "./Dashboard/Profile";
 import AddForm from "./constants/AddForm";
+import TestimonialsSection from "./Home/TestimonialsSection";
+import Footer from "./Home/Footer";
 
 export {
     Login,
@@ -27,5 +29,7 @@ export {
     Goals,
     AuthLayout,
     Profile,
-    AddForm
+    AddForm,
+    TestimonialsSection,
+    Footer
 }

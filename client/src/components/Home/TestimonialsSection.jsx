@@ -1,12 +1,15 @@
 import { Box, Typography, useTheme } from "@mui/material";
 
-const FeaturesSection = () => {
+const TestimonialsSection = () => {
   const theme = useTheme();
 
-  const features = [
-    { title: "Fast & Reliable", description: "Experience top-notch performance and reliability." },
-    { title: "User-Friendly", description: "Intuitive and easy-to-use interfaces." },
-    { title: "Secure", description: "Your data is safe with state-of-the-art encryption." },
+  const testimonials = [
+    { name: "John Doe", text: "This platform transformed my workflow!" },
+    {
+      name: "Jane Smith",
+      text: "Highly recommend for anyone looking to level up.",
+    },
+    { name: "Sam Wilson", text: "Amazing features and excellent support." },
   ];
 
   return (
@@ -14,7 +17,7 @@ const FeaturesSection = () => {
       component="section"
       sx={{
         py: theme.spacing(8),
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       <Box
@@ -34,52 +37,47 @@ const FeaturesSection = () => {
             color: theme.palette.text.primary,
           }}
         >
-          Features
+          What Our Users Say
         </Typography>
 
         <Box
           sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "1fr 1fr",
-              lg: "1fr 1fr 1fr",
-            },
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
             gap: theme.spacing(4),
           }}
         >
-          {features.map((feature, index) => (
+          {testimonials.map((testimonial, index) => (
             <Box
               key={index}
               sx={{
                 p: theme.spacing(3),
-                backgroundColor: theme.palette.background.paper,
+                backgroundColor: theme.palette.background.default,
                 borderRadius: theme.shape.borderRadius,
                 boxShadow: theme.shadows[2],
-                transition: "box-shadow 0.3s",
                 "&:hover": {
                   boxShadow: theme.shadows[6],
                 },
               }}
             >
               <Typography
-                variant="h6"
-                component="h3"
+                variant="body1"
                 sx={{
-                  fontWeight: "bold",
-                  mb: theme.spacing(1),
-                  color: theme.palette.text.primary,
-                }}
-              >
-                {feature.title}
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
+                  fontStyle: "italic",
+                  mb: theme.spacing(2),
                   color: theme.palette.text.secondary,
                 }}
               >
-                {feature.description}
+                {testimonial.text}
+              </Typography>
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  fontWeight: "bold",
+                  color: theme.palette.primary.main,
+                }}
+              >
+                - {testimonial.name}
               </Typography>
             </Box>
           ))}
@@ -89,4 +87,4 @@ const FeaturesSection = () => {
   );
 };
 
-export default FeaturesSection;
+export default TestimonialsSection;
