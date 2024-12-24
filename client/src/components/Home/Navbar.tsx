@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./navbar.css"
 import {
   AppBar,
   Toolbar,
@@ -134,14 +135,16 @@ const Navbar: React.FC = () => {
             </IconButton>
             <List>
               {menuItems.map((item) => (
-                <ListItem button key={item.text} component="a" href={item.link}>
-                  <ListItemText primary={item.text} />
-                </ListItem>
+                <Button>
+                  <ListItem key={item.text} component="a" href={item.link}>
+                    <ListItemText primary={item.text} />
+                  </ListItem>
+                </Button>
               ))}
             </List>
           </div>
           <div className="mb-4 pl-5">
-            <IconButton onClick={toggleTheme} color="inherit">
+            <IconButton onClick={toggleTheme} sx={{color: isDarkMode ? "inherit" : "orange"}}>
               {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
             </IconButton>
           </div>
