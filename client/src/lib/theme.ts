@@ -4,10 +4,10 @@ import { createTheme, ThemeOptions } from '@mui/material/styles';
 export const lightTheme = createTheme({
   palette: {
     primary: {
-      main: '#1976d2',
+      main: '#313131',
     },
     secondary: {
-      main: '#dc004e',
+      main: '#dc0f4e',
     },
     background: {
       default: '#f5f5f5',
@@ -26,10 +26,10 @@ export const lightTheme = createTheme({
 export const darkTheme = createTheme({
   palette: {
     primary: {
-      main: '#90caf9',
+      main: '#fff',
     },
     secondary: {
-      main: '#f48fb1',
+      main: '#000',
     },
     background: {
       default: '#121212',

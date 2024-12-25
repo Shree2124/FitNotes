@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { FeaturesSection, Footer, HeroSection, Navbar, TestimonialsSection } from "../../components";
+import { HeroSection, Navbar } from "../../components";
 import { useThemeContext } from "../../context/ThemeContext";
 
 const HomePage: React.FC = () => {
@@ -17,7 +17,7 @@ const HomePage: React.FC = () => {
         <Navbar />
       </div>
       <HeroSection />
-      <div className="w-full">
+      {/* <div className="w-full">
         <FeaturesSection />
       </div>
       <div className="w-full">
@@ -25,7 +25,7 @@ const HomePage: React.FC = () => {
       </div>
       <div className="w-full">
         <Footer />
-      </div>
+      </div> */}
     </Box>
   );
 };

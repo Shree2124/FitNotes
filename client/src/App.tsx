@@ -17,8 +17,11 @@ import { AuthLayout, DashboardLayout } from "./components/index";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/slices/authSlice";
-
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css";
 import { AppDispatch } from "./redux/store";
+
+
 
 function App() {
   const { theme } = useThemeContext();

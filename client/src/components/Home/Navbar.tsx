@@ -30,7 +30,6 @@ const Navbar: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  // TypeScript fix: define the type of the parameter for toggleDrawer
   const toggleDrawer = (open: boolean) => () => {
     setDrawerOpen(open);
   };
@@ -48,10 +47,15 @@ const Navbar: React.FC = () => {
           zIndex: "50",
           position: "fixed",
           bgcolor: "transparent",
-          color: "white",
+          color: "white",          
+          "&.css-1p2pusy-MuiPaper-root-MuiAppBar-root": {
+            boxShadow :"none"
+          }
         }}
       >
-        <Toolbar>
+        <Toolbar sx={{
+
+        }}>
           {isMobile ? (
             <>
               <Box
@@ -97,11 +101,15 @@ const Navbar: React.FC = () => {
               </div>
               <div className="flex gap-3">
                 {menuItems.map((item) => (
-                  <Button key={item.text} color="inherit" href={item.link}>
+                  <Button sx={{
+                    color: isDarkMode ? "white" : "yellow",
+                  }} key={item.text} href={item.link}>
                     {item.text}
                   </Button>
                 ))}
-                <IconButton onClick={toggleTheme} color="inherit">
+                <IconButton onClick={toggleTheme} sx={{
+                  color: "orange"
+                }}>
                   {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                 </IconButton>
               </div>
