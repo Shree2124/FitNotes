@@ -30,9 +30,9 @@ const addMuscle = asyncHandler(async (req, res) => {
 
 const editMuscle = asyncHandler(async (req, res) => {
     const { name, note } = req.body
-    const {muscleId} = req.params
+    const { muscleId } = req.params
     console.log(muscleId);
-    
+
 
     if (!name) {
         throw new ApiError(400, "Name is required")
@@ -51,6 +51,23 @@ const editMuscle = asyncHandler(async (req, res) => {
     )
 
     return res.status(200).json(new ApiResponse(201, updatedMuscle, "Muscle updated Successfully"))
+});
+
+const deleteMuscle = asyncHandler(async (req, res) => {
+    const { name } = req.body
+
+    if (name?.trim() === "") {
+        throw new ApiError(400, "Muscle name is required")
+    }
+
+    const muscle = await Muscle.findOne({name})
+
+    if (!muscle) {
+        throw new ApiError(404, "Muscle not found")
+    }
+
+    await Muscle.deleteOne({ name })
+    return res.status(200).json(new ApiResponse(200, null, "Muscle deleted Successfully"))
 })
 
-export { addMuscle, editMuscle };
+export { addMuscle, editMuscle, deleteMuscle };

@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const MuscleSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Types.ObjectId,
+        ref: "User",
+        required: true
+    },
     name: {
         type: String,
         required: true,
@@ -10,10 +15,11 @@ const MuscleSchema = new mongoose.Schema({
         type: String,
         trim: true,
     },
-    defaultExercises: [
+    defaultWorkouts: [
         {
             name: {
-                type: String,
+                type: mongoose.Types.ObjectId,
+                ref: "Workout",
                 required: true
             },
         },
