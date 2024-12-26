@@ -120,7 +120,7 @@ const HeroSection: React.FC = () => {
               transition: "left 0.4s ease-in-out",
             },
             "&:hover::before": {
-              content: '"->"',
+              content: '""',
               left: 0,
             },
             "& span": {
