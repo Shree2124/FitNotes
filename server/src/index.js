@@ -13,6 +13,8 @@ dbConnection().then(()=>{
 }).catch((err)=>{console.log(err);
 })
 
+app.get("/",(req, res)=>{res.send("hello")})
+
 
 app.listen(port,()=>{
     console.log(`app listening ${port}`);
