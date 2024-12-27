@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./navbar.css"
+import "./navbar.css";
 import {
   AppBar,
   Toolbar,
@@ -11,6 +11,7 @@ import {
   Box,
   Button,
   useTheme,
+  Tooltip,
 } from "@mui/material";
 import { Close, Menu } from "@mui/icons-material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
@@ -44,45 +45,38 @@ const Navbar: React.FC = () => {
     <>
       <AppBar
         sx={{
-          zIndex: "50",
+          zIndex: 50,
           position: "fixed",
           bgcolor: "transparent",
-          color: "white",          
-          "&.css-1p2pusy-MuiPaper-root-MuiAppBar-root": {
-            boxShadow :"none"
-          }
+        }}
+        style={{
+          boxShadow: "none",
         }}
       >
-        <Toolbar sx={{
-
-        }}>
+        <Toolbar>
           {isMobile ? (
-            <>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Logo
+                src="./fitnotes2.svg"
+                alt="FitNotes"
+                width="150px"
+                height="50px"
+              />
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={toggleDrawer(true)}
               >
-                <div>
-                  <Logo
-                    src="./fitnotes2.svg"
-                    alt="FitNotes"
-                    width="150px"
-                    height="50px"
-                  />
-                </div>
-                <IconButton
-                  edge="start"
-                  color="inherit"
-                  aria-label="menu"
-                  onClick={toggleDrawer(true)}
-                >
-                  <Menu />
-                </IconButton>
-              </Box>
-            </>
+                <Menu />
+              </IconButton>
+            </Box>
           ) : (
             <Box
               sx={{
@@ -91,51 +85,66 @@ const Navbar: React.FC = () => {
                 width: "100%",
               }}
             >
-              <div>
-                <Logo
-                  src="./fitnotes2.svg"
-                  alt="FitNotes"
-                  width="150px"
-                  height="50px"
-                />
-              </div>
-              <div className="flex gap-3">
+              <Logo
+                src="./fitnotes2.svg"
+                alt="FitNotes"
+                width="150px"
+                height="50px"
+              />
+              <Box className="flex gap-3">
                 {menuItems.map((item) => (
-                  <Button sx={{
-                    color: isDarkMode ? "white" : "yellow",
-                  }} key={item.text} href={item.link}>
+                  <Button
+                    sx={{
+                      color: "white",
+                      "&:hover": {
+                        color: "orange",
+                      },
+                    }}
+                    key={item.text}
+                    href={item.link}
+                  >
                     {item.text}
                   </Button>
                 ))}
-                <IconButton onClick={toggleTheme} sx={{
-                  color: "orange"
-                }}>
+                <IconButton
+                  onClick={toggleTheme}
+                  sx={{
+                    color: "orange",
+                  }}
+                >
                   {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
                 </IconButton>
-              </div>
+              </Box>
             </Box>
           )}
         </Toolbar>
       </AppBar>
 
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+      <Drawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={toggleDrawer(false)}
+        sx={{
+          "& .MuiDrawer-paper": {
+            bgcolor: isDarkMode ? "black" : "white",
+            color: isDarkMode ? "white" : "black",
+          },
+        }}
+      >
         <Box
           sx={{
             width: 250,
             display: "flex",
             flexDirection: "column",
-            alignItems: "baseline",
             justifyContent: "space-between",
             height: "100%",
           }}
           role="presentation"
-          onClick={toggleDrawer(false)}
-          onKeyDown={toggleDrawer(false)}
         >
-          <div>
+          <Box>
             <IconButton
               sx={{
-                color: "white",
+                color: isDarkMode ? "white" : "black",
               }}
               onClick={() => setDrawerOpen(false)}
             >
@@ -143,19 +152,36 @@ const Navbar: React.FC = () => {
             </IconButton>
             <List>
               {menuItems.map((item) => (
-                <Button>
-                  <ListItem key={item.text} component="a" href={item.link}>
-                    <ListItemText primary={item.text} />
-                  </ListItem>
-                </Button>
+                <ListItem key={item.text} component="a" href={item.link}>
+                  <ListItemText
+                    primary={item.text}
+                    sx={{
+                      color: isDarkMode ? "white" : "black",
+                      "&:hover": { color: isDarkMode ? "yellow" : "orange" },
+                    }}
+                  />
+                </ListItem>
               ))}
             </List>
-          </div>
-          <div className="mb-4 pl-5">
-            <IconButton onClick={toggleTheme} sx={{color: isDarkMode ? "inherit" : "orange"}}>
-              {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}
+          </Box>
+          <Box sx={{ p: 2 }}>
+            <IconButton
+              onClick={toggleTheme}
+              sx={{
+                color: isDarkMode ? "yellow" : "orange",
+              }}
+            >
+              {isDarkMode ? (
+                <Tooltip title={"Change theme"}>
+                  <Brightness7Icon />
+                </Tooltip>
+              ) : (
+                <Tooltip title={"Change theme"}>
+                  <Brightness4Icon />
+                </Tooltip>
+              )}
             </IconButton>
-          </div>
+          </Box>
         </Box>
       </Drawer>
     </>
