@@ -3,7 +3,8 @@ import { clearUser, setAuth } from "../redux/slices/authSlice";
 import { store } from "../redux/store";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  // baseURL: "http://localhost:8000/api/v1",
+  baseURL: "https://fit-notes.vercel.app/api/v1",
   withCredentials: true,
 });
 
