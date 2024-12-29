@@ -1,5 +1,5 @@
 const options = {
-    domain: 'fitnotes-six.vercel.app',
+    // domain: 'fitnotes-six.vercel.app',
     httpOnly: true,           
     secure: true,              
     sameSite: 'None',          
