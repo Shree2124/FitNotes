@@ -115,7 +115,7 @@ const SideBar: React.FC<SideBarProps> = ({ w = "100%", h = "" }) => {
               location.pathname === tab.path
                 ? {
                     bgcolor: theme.palette.primary.main,
-                    color: theme.palette.text.secondary,
+                    color: isDarkMode ? "black" : "white",
                   }
                 : undefined
             }
