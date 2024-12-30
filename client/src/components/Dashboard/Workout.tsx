@@ -1,217 +1,103 @@
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import {
-  Box,
   Typography,
-  Grid,
-  Card,
-  CardContent,
-  Avatar,
+  Stack,
   IconButton,
-  Modal,
   Menu,
   MenuItem,
-} from "@mui/material";
-import { Add, Close, MoreVert } from "@mui/icons-material";
-import { AddForm } from "../index";
-import chest from "../../assets/chest.jpg";
-import shoulder from "../../assets/shoulder.jpg";
-import legs from "../../assets/legs.jpg";
-import bicep from "../../assets/bicep.jpg";
-import back from "../../assets/back.jpg";
-import abs from "../../assets/abs.jpg";
-import cardio from "../../assets/cardio.jpg";
-import triceps from "../../assets/triceps.webp";
-import { useThemeContext } from "../../context/ThemeContext";
+  Container,
+  Box,
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { workouts } from '../constants/sampleData';
 
-// Define types for muscle data
-interface Muscle {
+type WorkoutType = {
   id: string;
   name: string;
-  image: string;
-  smallImage: string;
-}
+};
+
+
 
 const Workout: React.FC = () => {
-  const [muscles, setMuscles] = useState<Muscle[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // State for the menu anchor
-  const [selectedMuscle, setSelectedMuscle] = useState<Muscle | null>(null); // State for the selected muscle
+  const { muscleName } = useParams<{ muscleName: string }>();
 
-  const { theme } = useThemeContext();
+  const muscleData = workouts.find(
+    (muscle) => muscle.name.toLowerCase() === muscleName?.toLowerCase()
+  );
 
-  const dummyMuscles: Muscle[] = [
-    { id: "1", name: "Abs", image: "", smallImage: abs },
-    { id: "2", name: "Back", image: "", smallImage: back },
-    { id: "3", name: "Biceps", image: "", smallImage: bicep },
-    { id: "4", name: "Cardio", image: "", smallImage: cardio },
-    { id: "5", name: "Chest", image: "", smallImage: chest },
-    { id: "6", name: "Legs", image: "", smallImage: legs },
-    { id: "7", name: "Shoulders", image: "", smallImage: shoulder },
-    { id: "8", name: "Triceps", image: "", smallImage: triceps },
-  ];
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedWorkout, setSelectedWorkout] = useState<WorkoutType | null>(null);
 
-  useEffect(() => {
-    setMuscles(dummyMuscles); // TODO: Replace with actual API call if needed
-  }, []);
-
-  const handleMenuOpen = (
-    event: MouseEvent<HTMLButtonElement>,
-    muscle: Muscle
-  ) => {
+  const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>, workout: WorkoutType) => {
     setAnchorEl(event.currentTarget);
-    setSelectedMuscle(muscle);
+    setSelectedWorkout(workout);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedMuscle(null);
+    setSelectedWorkout(null);
   };
 
   const handleEdit = () => {
-    console.log("Edit:", selectedMuscle);
+    console.log("Edit", selectedWorkout);
     handleMenuClose();
   };
 
   const handleDelete = () => {
-    setMuscles(muscles.filter((muscle) => muscle.id !== selectedMuscle?.id));
+    console.log("Delete", selectedWorkout);
     handleMenuClose();
   };
 
   return (
-    <Box
-      sx={{
-        padding: { xs: 2, sm: 4 },
-        backgroundColor: theme.palette.background.default,
-        minHeight: "100vh",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 5,
-        }}
-      >
-        <Typography
-          variant="h4"
-          gutterBottom
-          sx={{ textAlign: "center", color: theme.palette.text.primary }}
-        >
-          Workout Muscles
-        </Typography>
-
-        <IconButton
-          onClick={() => setIsModalOpen(true)}
-          sx={{
-            backgroundColor: "primary.main",
-            color: "text.primary",
-            "&:hover": {
-              backgroundColor: "primary.dark",
-            },
-            boxShadow: 2,
-            transition: "transform 0.3s",
-            "&:active": {
-              transform: "scale(0.9)",
-            },
-          }}
-        >
-          <Add />
-        </IconButton>
-      </Box>
-
-      <Grid container spacing={3}>
-        {muscles.map((muscle) => (
-          <Grid item xs={12} sm={6} md={4} key={muscle.id}>
-            <Card
-              sx={{
-                borderRadius: 2,
-                boxShadow: 3,
-                transition: "transform 0.2s",
-                "&:hover": { transform: "scale(1.05)" },
-                backgroundColor: theme.palette.background.paper,
-              }}
-            >
-              <CardContent
+    <Container maxWidth="md" sx={{ mt: 4 }}>
+      {muscleData ? (
+        <>
+          <Typography variant="h4" gutterBottom>
+            {muscleData.name} Workouts
+          </Typography>
+          <Stack spacing={2}>
+            {muscleData.workouts.map((workout) => (
+              <Box
+                key={workout.id}
                 sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: 2,
+                  border: '1px solid #ccc',
+                  borderRadius: 2,
+                  bgcolor: '#f9f9f9',
                 }}
               >
-                <Typography
-                  variant="h6"
-                  sx={{ fontWeight: "bold", color: theme.palette.text.primary }}
+                <Typography variant="h6">{workout.name}</Typography>
+                <IconButton
+                  aria-label="more options"
+                  onClick={(e) => handleMenuOpen(e, workout)}
                 >
-                  {muscle.name}
-                </Typography>
-                <div>
-                  <Avatar
-                    src={muscle.smallImage}
-                    alt={`${muscle.name} Exercise`}
-                    sx={{
-                      width: { xs: "3rem", sm: "5rem" },
-                      height: { xs: "3rem", sm: "5rem" },
-                    }}
-                  />
-                  <IconButton
-                    onClick={(event) => handleMenuOpen(event, muscle)}
-                    sx={{
-                      position: "relative",
-                      right: "0",
-                      left: { lg: "3rem", sm: "3rem" },
-                      paddingTop: "1rem",
-                      paddingBottom: "0",
-                    }}
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+                  <MoreVertIcon />
+                </IconButton>
+              </Box>
+            ))}
+          </Stack>
 
-      {/* Dropdown Menu */}
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
-      </Menu>
-
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: theme.palette.background.paper,
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
-        >
-          <IconButton
-            sx={{
-              color: theme.palette.text.primary,
-              position: "absolute",
-              right: "1.7rem",
-              top: "1rem",
-            }}
-            onClick={() => setIsModalOpen(false)}
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleMenuClose}
           >
-            <Close />
-          </IconButton>
-          <AddForm type="muscle" />
+            <MenuItem onClick={handleEdit}>Edit</MenuItem>
+            <MenuItem onClick={handleDelete}>Delete</MenuItem>
+          </Menu>
+        </>
+      ) : (
+        <Box textAlign="center" mt={4}>
+          <Typography variant="h5" color="error">
+            Muscle group not found
+          </Typography>
         </Box>
-      </Modal>
-    </Box>
+      )}
+    </Container>
   );
 };
 

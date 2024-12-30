@@ -1,7 +1,7 @@
 import React from 'react'
 import { Workout } from '../../components'
 
-const WorkoutPage : React.FC = () => {
+const WorkoutPage: React.FC = () => {
   return (
     <div>
       <Workout />

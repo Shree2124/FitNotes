@@ -8,7 +8,8 @@ import {
   ProgressPage,
   RegisterPage,
   WorkoutPage,
-  ProfilePage
+  ProfilePage,
+  MusclePage,
 } from "./pages/index";
 import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
@@ -17,11 +18,9 @@ import { AuthLayout, DashboardLayout } from "./components/index";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { fetchUser } from "./redux/slices/authSlice";
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { AppDispatch } from "./redux/store";
-
-
 
 function App() {
   const { theme } = useThemeContext();
@@ -45,12 +44,15 @@ function App() {
               <AuthLayout>
                 <DashboardLayout>
                   <Routes>
-                    <Route path="" element={<DashboardHomePage />} />
-                    <Route path="workouts" element={<WorkoutPage />} />
+                    <Route path="/" element={<DashboardHomePage />} />
+                    <Route path="/workouts" element={<MusclePage />}>
+                      {/* <Route path="/" element={<MusclePage />}></Route> */}
+                    </Route>
+                      <Route path="/workouts/:muscleName" element={<WorkoutPage />} />
                     {/* <Route path="nutrition" element={<NutritionPage />} /> */}
-                    <Route path="progress" element={<ProgressPage />} />
-                    <Route path="goals" element={<GoalsPage />} />
-                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="/progress" element={<ProgressPage />} />
+                    <Route path="/goals" element={<GoalsPage />} />
+                    <Route path="/profile" element={<ProfilePage />} />
                   </Routes>
                 </DashboardLayout>
               </AuthLayout>
