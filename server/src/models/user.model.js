@@ -20,19 +20,41 @@ const userSchema = new Schema(
             trim: true,
         },
         avatar: {
-            type: String, // cloudinary url
-        },
-        coverImage: {
-            type: String, // cloudinary url
+            type: String,
         },
         password: {
             type: String,
             required: [true, 'Password is required']
         },
+        muscle: [
+            {
+                name: {
+                    type: String,
+                    required: true,
+                    unique: true
+                },
+                exercises: [
+                    {
+                        name: {
+                            type: String,
+                        },
+                        sets: [
+                            {
+                                wight: {
+                                    type: Number,
+                                },
+                                reputations: {
+                                    type: Number
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
         refreshToken: {
             type: String
         }
-
     },
     {
         timestamps: true

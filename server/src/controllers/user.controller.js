@@ -24,6 +24,74 @@ const generateAccessAndRefreshTokens = async (userId) => {
     }
 }
 
+const defaultMuscleAndExercise = [
+    {
+        name: "Abs",
+        exercises: [
+            { name: "Crunches", sets: [] },
+            { name: "Plank", sets: [] },
+            { name: "Hanging Leg Raises", sets: [] }
+        ]
+    },
+    {
+        name: "Back",
+        exercises: [
+            { name: "Pull-ups", sets: [] },
+            { name: "Deadlift", sets: [] },
+            { name: "Bent Over Row", sets: [] }
+        ]
+    },
+    {
+        name: "Biceps",
+        exercises: [
+            { name: "Bicep Curl", sets: [] },
+            { name: "Hammer Curl", sets: [] },
+            { name: "Concentration Curl", sets: [] }
+        ]
+    },
+    {
+        name: "Cardio",
+        exercises: [
+            { name: "Running", sets: [] },
+            { name: "Cycling", sets: [] },
+            { name: "Jump Rope", sets: [] }
+        ]
+    },
+    {
+        name: "Chest",
+        exercises: [
+            { name: "Bench Press", sets: [] },
+            { name: "Incline Dumbbell Press", sets: [] },
+            { name: "Push-ups", sets: [] }
+        ]
+    },
+    {
+        name: "Legs",
+        exercises: [
+            { name: "Squats", sets: [] },
+            { name: "Leg Press", sets: [] },
+            { name: "Lunges", sets: [] }
+        ]
+    },
+    {
+        name: "Shoulders",
+        exercises: [
+            { name: "Overhead Press", sets: [] },
+            { name: "Lateral Raises", sets: [] },
+            { name: "Arnold Press", sets: [] }
+        ]
+    },
+    {
+        name: "Triceps",
+        exercises: [
+            { name: "Tricep Dips", sets: [] },
+            { name: "Skull Crushers", sets: [] },
+            { name: "Overhead Tricep Extension", sets: [] }
+        ]
+    }
+];
+
+
 const registerUser = asyncHandler(async (req, res) => {
     const { email, username, password } = req.body;
     if (
@@ -165,11 +233,12 @@ const verifyUser = asyncHandler(async (req, res) => {
         username: verify.user.username,
         email: verify.user.email,
         password: verify.user.password,
+        muscle: defaultMuscleAndExercise
     });
 
-    res.json({
-        message: "User Registered",
-    });
+    res.json(
+        new ApiResponse(200, null, "User Registered")
+    );
 })
 
 const refreshAccessToken = asyncHandler(async (req, res) => {

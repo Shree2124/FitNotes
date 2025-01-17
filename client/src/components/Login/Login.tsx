@@ -60,7 +60,6 @@ const Login = () => {
 
   return (
     <Grid container sx={{ height: "100vh" }}>
-      {/* Left Section with Background Image */}
       <Grid
         item
         xs={false}
@@ -85,7 +84,6 @@ const Login = () => {
         />
       </Grid>
 
-      {/* Right Section with Form */}
       <Grid
         item
         xs={12}
