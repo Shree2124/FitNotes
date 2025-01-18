@@ -5,23 +5,19 @@ import {
   Grid,
   Card,
   CardContent,
-  Avatar,
   IconButton,
   Modal,
   Menu,
   MenuItem,
+  ButtonGroup,
+  Button,
 } from "@mui/material";
 import { Add, Close, MoreVert } from "@mui/icons-material";
 import { AddForm } from "../index";
-import chest from "../../assets/chest.jpg";
-import shoulder from "../../assets/shoulder.jpg";
-import legs from "../../assets/legs.jpg";
-import bicep from "../../assets/bicep.jpg";
-import back from "../../assets/back.jpg";
-import abs from "../../assets/abs.jpg";
-import cardio from "../../assets/cardio.jpg";
-import triceps from "../../assets/triceps.webp";
 import { useThemeContext } from "../../context/ThemeContext";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { api } from "../../api/api";
 
 interface MuscleI {
   id: string;
@@ -33,25 +29,18 @@ interface MuscleI {
 const Muscle: React.FC = () => {
   const [muscles, setMuscles] = useState<MuscleI[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); 
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMuscle, setSelectedMuscle] = useState<MuscleI | null>(null);
+  const { user } = useSelector((state: RootState) => state.user);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
   const { theme } = useThemeContext();
 
-  const dummyMuscles: MuscleI[] = [
-    { id: "1", name: "Abs", image: "", smallImage: abs },
-    { id: "2", name: "Back", image: "", smallImage: back },
-    { id: "3", name: "Biceps", image: "", smallImage: bicep },
-    { id: "4", name: "Cardio", image: "", smallImage: cardio },
-    { id: "5", name: "Chest", image: "", smallImage: chest },
-    { id: "6", name: "Legs", image: "", smallImage: legs },
-    { id: "7", name: "Shoulders", image: "", smallImage: shoulder },
-    { id: "8", name: "Triceps", image: "", smallImage: triceps },
-  ];
-
   useEffect(() => {
-    setMuscles(dummyMuscles); // TODO: Replace with actual API call if needed
-  }, []);
+    if (user?.muscle) {
+      setMuscles(user.muscle);
+    }
+  }, [user]);
 
   const handleMenuOpen = (
     event: MouseEvent<HTMLButtonElement>,
@@ -71,9 +60,29 @@ const Muscle: React.FC = () => {
     handleMenuClose();
   };
 
-  const handleDelete = () => {
-    setMuscles(muscles.filter((muscle) => muscle.id !== selectedMuscle?.id));
+  const handleDelete = (muscle: MuscleI) => {
+    setShowDeleteModal(true);
+    setSelectedMuscle(muscle);
     handleMenuClose();
+  };
+
+  const deleteMuscle = async () => {
+    try {
+      if (selectedMuscle) {
+        await api.delete("/muscle/delete-muscle", {
+          data: { name: selectedMuscle.name },
+        });
+
+        // Update the local state after deletion
+        setMuscles((prev) =>
+          prev.filter((muscle) => muscle.name !== selectedMuscle.name)
+        );
+        setShowDeleteModal(false);
+        setSelectedMuscle(null);
+      }
+    } catch (error) {
+      console.error("Failed to delete muscle:", error);
+    }
   };
 
   return (
@@ -104,7 +113,7 @@ const Muscle: React.FC = () => {
           onClick={() => setIsModalOpen(true)}
           sx={{
             backgroundColor: "primary.main",
-            color: "text.primary",
+            color: theme.palette.background.paper,
             "&:hover": {
               backgroundColor: "primary.dark",
             },
@@ -140,32 +149,21 @@ const Muscle: React.FC = () => {
               >
                 <Typography
                   variant="h6"
-                  sx={{ fontWeight: "bold", color: theme.palette.text.primary }}
+                  sx={{
+                    fontWeight: "bold",
+                    color: theme.palette.text.primary,
+                  }}
                 >
                   {muscle.name}
                 </Typography>
-                <div>
-                  <Avatar
-                    src={muscle.smallImage}
-                    alt={`${muscle.name} Exercise`}
-                    sx={{
-                      width: { xs: "3rem", sm: "5rem" },
-                      height: { xs: "3rem", sm: "5rem" },
-                    }}
-                  />
-                  <IconButton
-                    onClick={(event) => handleMenuOpen(event, muscle)}
-                    sx={{
-                      position: "relative",
-                      right: "0",
-                      left: { lg: "3rem", sm: "3rem" },
-                      paddingTop: "1rem",
-                      paddingBottom: "0",
-                    }}
-                  >
-                    <MoreVert />
-                  </IconButton>
-                </div>
+                <IconButton
+                  onClick={(event) => handleMenuOpen(event, muscle)}
+                  sx={{
+                    color: theme.palette.primary.main,
+                  }}
+                >
+                  <MoreVert />
+                </IconButton>
               </CardContent>
             </Card>
           </Grid>
@@ -178,8 +176,50 @@ const Muscle: React.FC = () => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={handleDelete}>Delete</MenuItem>
+        <MenuItem onClick={() => handleDelete(selectedMuscle!)}>
+          Delete
+        </MenuItem>
       </Menu>
+
+      <Modal open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 400,
+            bgcolor: theme.palette.background.paper,
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+          }}
+        >
+          <IconButton
+            sx={{
+              color: theme.palette.text.primary,
+              position: "absolute",
+              right: "1.7rem",
+              top: "1rem",
+            }}
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <Close />
+          </IconButton>
+          <Typography>Are you sure you want to delete this muscle?</Typography>
+          <ButtonGroup sx={{ mt: 2 }}>
+            <Button
+              onClick={() => {
+                setShowDeleteModal(false);
+                setSelectedMuscle(null);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={deleteMuscle}>Delete</Button>
+          </ButtonGroup>
+        </Box>
+      </Modal>
 
       <Modal open={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <Box

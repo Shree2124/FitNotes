@@ -52,6 +52,26 @@ const userSchema = new Schema(
                 ]
             }
         ],
+        weightHistory: [
+            {
+                date: {
+                    type: Date
+                },
+                weight: {
+                    type: Number
+                }
+            }
+        ],
+        caloriesHistory: [
+            {
+                date: {
+                    type: Date
+                },
+                calories: {
+                    type: Number
+                }
+            }
+        ],
         refreshToken: {
             type: String
         }
@@ -60,6 +80,7 @@ const userSchema = new Schema(
         timestamps: true
     }
 )
+
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
