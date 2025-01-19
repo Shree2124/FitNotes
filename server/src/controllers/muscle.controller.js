@@ -71,10 +71,6 @@ const deleteMuscle = asyncHandler(async (req, res) => {
     const existingMuscle = user?.muscle?.some((obj) => obj.name === name)
 
 
-    if (existingMuscle) {
-        throw new ApiError(409, "Muscle with this name already exists");
-    }
-
     const updatedArray = dbUser.muscle?.filter((obj) => obj.name !== name)
     dbUser.muscle = updatedArray
     await dbUser.save()

@@ -1,6 +1,5 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
 
-// Define the theme configuration for light and dark themes
 export const lightTheme = createTheme({
   palette: {
     primary: {

@@ -9,7 +9,6 @@ import {
   Modal,
   Menu,
   MenuItem,
-  ButtonGroup,
   Button,
 } from "@mui/material";
 import { Add, Close, MoreVert } from "@mui/icons-material";
@@ -31,9 +30,8 @@ const Muscle: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMuscle, setSelectedMuscle] = useState<MuscleI | null>(null);
-  const { user } = useSelector((state: RootState) => state.user);
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-
+  const { user } = useSelector((state: RootState) => state.user);
   const { theme } = useThemeContext();
 
   useEffect(() => {
@@ -52,7 +50,7 @@ const Muscle: React.FC = () => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedMuscle(null);
+    // setSelectedMuscle(null);
   };
 
   const handleEdit = () => {
@@ -60,28 +58,28 @@ const Muscle: React.FC = () => {
     handleMenuClose();
   };
 
-  const handleDelete = (muscle: MuscleI) => {
+  const handleDelete = () => {
     setShowDeleteModal(true);
-    setSelectedMuscle(muscle);
     handleMenuClose();
   };
 
   const deleteMuscle = async () => {
-    try {
-      if (selectedMuscle) {
-        await api.delete("/muscle/delete-muscle", {
-          data: { name: selectedMuscle.name },
-        });
+    if (!selectedMuscle) return;
 
-        // Update the local state after deletion
-        setMuscles((prev) =>
-          prev.filter((muscle) => muscle.name !== selectedMuscle.name)
-        );
-        setShowDeleteModal(false);
-        setSelectedMuscle(null);
-      }
+    try {
+      const res = await api.delete("/muscle/delete-muscle", {
+        data: { name: selectedMuscle.name },
+      });
+
+      setMuscles((prev) =>
+        prev.filter((muscle) => muscle.name !== selectedMuscle.name)
+      );
+      console.log("Delete Response:", res.data.data);
     } catch (error) {
       console.error("Failed to delete muscle:", error);
+    } finally {
+      setShowDeleteModal(false);
+      setSelectedMuscle(null);
     }
   };
 
@@ -134,7 +132,7 @@ const Muscle: React.FC = () => {
             <Card
               sx={{
                 borderRadius: 2,
-                boxShadow: 3,
+                boxShadow: 1,
                 transition: "transform 0.2s",
                 "&:hover": { transform: "scale(1.05)" },
                 backgroundColor: theme.palette.background.paper,
@@ -176,9 +174,7 @@ const Muscle: React.FC = () => {
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleEdit}>Edit</MenuItem>
-        <MenuItem onClick={() => handleDelete(selectedMuscle!)}>
-          Delete
-        </MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
       </Menu>
 
       <Modal open={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
@@ -188,36 +184,105 @@ const Muscle: React.FC = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 400,
+            width: "90%",
+            maxWidth: 450,
             bgcolor: theme.palette.background.paper,
+            color: theme.palette.text.primary,
             boxShadow: 24,
             p: 4,
-            borderRadius: 2,
+            borderRadius: 3,
+            textAlign: "center",
           }}
-        >
+        >          
           <IconButton
             sx={{
-              color: theme.palette.text.primary,
               position: "absolute",
-              right: "1.7rem",
-              top: "1rem",
+              top: 16,
+              right: 16,
+              color: theme.palette.text.primary,
             }}
             onClick={() => setShowDeleteModal(false)}
           >
             <Close />
           </IconButton>
-          <Typography>Are you sure you want to delete this muscle?</Typography>
-          <ButtonGroup sx={{ mt: 2 }}>
+
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+              mb: 2,
+            }}
+          >
+            Confirm Deletion
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: theme.palette.text.secondary || theme.palette.text.primary,
+              mb: 4,
+              lineHeight: 1.6,
+            }}
+          >
+            Are you sure you want to delete the muscle{" "}
+            <strong>{selectedMuscle?.name}</strong>? This action cannot be
+            undone.
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+              gap: 2,
+              mt: 3,
+            }}
+          >
             <Button
               onClick={() => {
                 setShowDeleteModal(false);
                 setSelectedMuscle(null);
               }}
+              variant="outlined"
+              sx={{
+                px: 4,
+                py: 1.5,
+                borderColor: theme.palette.primary.main,
+                color: theme.palette.primary.main,
+                "&:hover": {
+                  borderColor: theme.palette.secondary.main,
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.background.default
+                      : theme.palette.secondary.main,
+                  color:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.primary.main
+                      : theme.palette.text.primary,
+                },
+              }}
             >
               Cancel
             </Button>
-            <Button onClick={deleteMuscle}>Delete</Button>
-          </ButtonGroup>
+            <Button
+              onClick={() => deleteMuscle()}
+              variant="contained"
+              color="secondary"
+              sx={{
+                px: 4,
+                py: 1.5,
+                fontWeight: "bold",
+                backgroundColor: theme.palette.secondary.main,
+                "&:hover": {
+                  backgroundColor:
+                    theme.palette.mode === "dark"
+                      ? theme.palette.secondary.dark
+                      : theme.palette.secondary.light,
+                },
+              }}
+            >
+              Delete
+            </Button>
+          </Box>
         </Box>
       </Modal>
 
